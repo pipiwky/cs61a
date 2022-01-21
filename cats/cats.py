@@ -18,8 +18,13 @@ def choose(paragraphs, select, k):
     # BEGIN PROBLEM 1
     "*** YOUR CODE HERE ***"
     # END PROBLEM 1
-
-
+    cnt = 0
+    for i in range(len(paragraphs)):
+        if(select(paragraphs[i])):
+            cnt += 1
+            if(cnt ==k+1):
+                return paragraphs[i]
+    return ''
 def about(topic):
     """Return a select function that returns whether a paragraph contains one
     of the words in TOPIC.
@@ -34,6 +39,13 @@ def about(topic):
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
     # END PROBLEM 2
+    def word_check(sentence):
+        for i in topic:
+            tmp = set(split(lower(remove_punctuation(sentence))))
+            if i in tmp:
+                return True
+        return False
+    return word_check
 
 
 def accuracy(typed, reference):
