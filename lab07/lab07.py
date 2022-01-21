@@ -7,7 +7,9 @@ def insert_into_all(item, nested_list):
     >>> insert_into_all(0, nl)
     [[0], [0, 1, 2], [0, 3]]
     """
-    return ______________________________
+    for i in nested_list:
+        i.insert(0,item)
+    return nested_list
 
 def subseqs(s):
     """Assuming that S is a list, return a nested list of all subsequences
@@ -19,11 +21,10 @@ def subseqs(s):
     >>> subseqs([])
     [[]]
     """
-    if ________________:
-        ________________
+    if not s:
+        return [[]]
     else:
-        ________________
-        ________________
+        return insert_into_all(s[0],subseqs(s[1:]))  + subseqs(s[1:])
 
 
 def inc_subseqs(s):
@@ -42,14 +43,14 @@ def inc_subseqs(s):
     """
     def subseq_helper(s, prev):
         if not s:
-            return ____________________
+            return [[]]
         elif s[0] < prev:
-            return ____________________
+            return subseq_helper(s[1:],prev)
         else:
-            a = ______________________
-            b = ______________________
-            return insert_into_all(________, ______________) + ________________
-    return subseq_helper(____, ____)
+            a = subseq_helper(s[1:],prev)
+            b = subseq_helper(s[1:],s[0])
+            return insert_into_all(s[0], b) + a
+    return subseq_helper(s, -1000)
 
 
 def trade(first, second):
@@ -81,14 +82,14 @@ def trade(first, second):
     """
     m, n = 1, 1
 
-    equal_prefix = lambda: ______________________
-    while _______________________________:
-        if __________________:
+    equal_prefix = lambda x,y:  sum(first[:x])== sum(second[:y])
+    while m<len(first) and n<len(second) and sum(first[:m]) != sum(second[:n]):
+        if sum(first[:m]) < sum(second[:n]):
             m += 1
         else:
             n += 1
 
-    if equal_prefix():
+    if equal_prefix(m,n):
         first[:m], second[:n] = second[:n], first[:m]
         return 'Deal!'
     else:
@@ -108,7 +109,11 @@ def reverse(lst):
     [-8, 72, 42]
     """
     "*** YOUR CODE HERE ***"
-
+    l = range(len(lst))
+    for i ,j in zip(l, l[::-1]):
+        if i >= j:
+            break
+        lst[i], lst[j] = lst[j], lst[i]
 
 cs61a = {
     "Homework": 2,
@@ -135,8 +140,13 @@ def make_glookup(class_assignments):
     0.8913043478260869
     """
     "*** YOUR CODE HERE ***"
-
-
+    grade,total = 0,0
+    def look(key,tmp):
+        nonlocal grade,total
+        total += cs61a[key]
+        grade += tmp
+        return grade/total
+    return look
 def num_trees(n):
     """How many full binary trees have exactly n leaves? E.g.,
 
@@ -157,9 +167,9 @@ def num_trees(n):
     429
 
     """
-    if ____________________:
-        return _______________
-    return _______________
+    if n == 1 or n == 2:
+        return 1
+    return num_trees(n-1)*2*(2*n-3)//n
 
 
 def make_advanced_counter_maker():
