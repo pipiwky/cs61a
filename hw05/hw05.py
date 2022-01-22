@@ -18,8 +18,20 @@ def make_bank(balance):
     >>> bank('withdraw', 60)    # 180 - 60
     120
     """
+    total = balance
     def bank(message, amount):
-        "*** YOUR CODE HERE ***"
+        nonlocal total
+        if message == 'withdraw':
+            if(total > amount):
+                total -= amount
+                return total
+            else:
+                return 'Insufficient funds'
+        elif message == 'deposit':
+            total += amount
+            return total
+        else:
+            return 'Invalid message'
     return bank
 
 
@@ -52,8 +64,25 @@ def make_withdraw(balance, password):
     True
     """
     "*** YOUR CODE HERE ***"
-
-
+    total = balance
+    right = password
+    cnt = 0
+    lst = []
+    def withdraw(m,p):
+        nonlocal total,right,cnt,lst
+        if cnt == 3:
+            return "Too many incorrect attempts. Attempts: " + str(lst)
+        if p != right:
+            cnt +=1
+            lst.append(p)
+            return 'Incorrect password'
+        else:
+            if(m >total):
+                return 'Insufficient funds'
+            else:
+                total -= m
+                return total
+    return withdraw
 def repeated(t, k):
     """Return the first value in iterator T that appears K times in a row. Iterate through the items such that
     if the same iterator is passed into repeated twice, it continues in the second call at the point it left off
@@ -76,6 +105,16 @@ def repeated(t, k):
     """
     assert k > 1
     "*** YOUR CODE HERE ***"
+    last = next(t)
+    occur_times = 1
+    for v in t:
+        if v == last:
+            occur_times += 1
+            if occur_times == k:
+                return v
+        else:
+            occur_times = 1
+            last = v
 
 
 def merge(incr_a, incr_b):
@@ -98,6 +137,23 @@ def merge(incr_a, incr_b):
     iter_a, iter_b = iter(incr_a), iter(incr_b)
     next_a, next_b = next(iter_a, None), next(iter_b, None)
     "*** YOUR CODE HERE ***"
+    while next_a is not None or next_b is not None:
+        if next_a is None:
+            yield next_b
+            next_b = next(iter_b, None)
+        elif next_b is None:
+            yield next_a
+            next_a = next(iter_a, None)
+        else:
+            if next_a < next_b:
+                yield next_a
+                next_a = next(iter_a, None)
+            elif next_b < next_a:
+                yield next_b
+                next_b = next(iter_b, None)
+            else:
+                yield next_a
+                next_a, next_b = next(iter_a, None), next(iter_b, None)
 
 
 def make_joint(withdraw, old_pass, new_pass):
