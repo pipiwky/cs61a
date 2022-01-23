@@ -8,7 +8,11 @@ def convert_link(link):
     []
     """
     "*** YOUR CODE HERE ***"
-
+    print("Debug: ",link)
+    if not link:
+        return []
+    else:
+        return [link.first] + convert_link(link.rest)
 
 def every_other(s):
     """Mutates a linked list so that all the odd-indiced elements are removed
@@ -28,7 +32,10 @@ def every_other(s):
     Link(4)
     """
     "*** YOUR CODE HERE ***"
-
+    if s == Link.empty or s.rest == Link.empty:
+        return
+    s.rest = s.rest.rest
+    return every_other(s.rest)
 
 def label_squarer(t):
     """Mutates a Tree t by squaring all its elements.
@@ -39,6 +46,12 @@ def label_squarer(t):
     Tree(1, [Tree(9, [Tree(25)]), Tree(49)])
     """
     "*** YOUR CODE HERE ***"
+    if t.is_leaf():
+        t.label *= t.label
+    else:
+        t.label *= t.label
+        for b in t.branches:
+            label_squarer(b)
 
 
 def cumulative_mul(t):
@@ -51,6 +64,18 @@ def cumulative_mul(t):
     Tree(105, [Tree(15, [Tree(5)]), Tree(7)])
     """
     "*** YOUR CODE HERE ***"
+    #print("Debug: ",t)
+    if t.is_leaf():
+        #print("Debug: xxx")
+        return t.label
+    else:
+        tmp = t.label
+     #   print("Debug: aaa")
+        for b in t.branches:
+            cumulative_mul(b)
+        for b in t.branches:
+            tmp *= b.label
+        t.label = tmp
 
 
 def has_cycle(link):
