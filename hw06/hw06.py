@@ -119,17 +119,20 @@ class Mint:
 
     def create(self, kind):
         "*** YOUR CODE HERE ***"
-
+        #print("Debug: ",self.year)
+       # kind.year = self.year
+        return kind(self.year)
     def update(self):
         "*** YOUR CODE HERE ***"
-
+        self.year = Mint.current_year
 class Coin:
     def __init__(self, year):
         self.year = year
-
     def worth(self):
         "*** YOUR CODE HERE ***"
+        time = Mint.current_year - self.year
 
+        return self.cents + (0 if time < 50 else time - 50)
 class Nickel(Coin):
     cents = 5
 
@@ -163,7 +166,40 @@ def is_bst(t):
     False
     """
     "*** YOUR CODE HERE ***"
+    def bst_min(t):
+        if t.is_leaf():
+            return t.label
+        elif len(t.branches) == 1:
+            if t.label > t.branches[0].label:
+                return bst_min(t.branches[0])
+            else:
+                return t.label
+        else:
+            return bst_min(t.branches[0])
 
+    def bst_max(t):
+        if t.is_leaf():
+            return t.label
+        elif len(t.branches) == 1:
+            if t.label < t.branches[0].label:
+                return bst_max(t.branches[0])
+            else:
+                return t.label
+        else:
+            return bst_max(t.branches[1])
+
+    if t.is_leaf():
+        return True
+    if len(t.branches) == 1:
+        if t.label > t.branches[0].label:
+            return is_bst(t.branches[0]) and t.label >= bst_max(t.branches[0])
+        else:
+            return is_bst(t.branches[0]) and t.label < bst_min(t.branches[0])
+    elif len(t.branches) == 2:
+        le, ri = t.branches
+        return is_bst(le) and is_bst(ri) and (bst_max(le) <= t.label < bst_min(ri))
+    else:
+        return False
 
 def store_digits(n):
     """Stores the digits of a positive number n in a linked list.
@@ -181,7 +217,21 @@ def store_digits(n):
     >>> print("Do not use str or reversed!") if any([r in cleaned for r in ["str", "reversed"]]) else None
     """
     "*** YOUR CODE HERE ***"
+    def find(n):
+        cnt = 0
+        while(n>0):
+            n = n // 10
+            cnt += 1
+        return cnt
+    def helper(new):
+        if new <10 :
+            return Link(new)
+        else:
+            l = find(new)
+            print("Debug: ",l,new)
 
+            return Link(new // (10**(l-1)),helper(new % (10**(l-1))))
+    return helper(n)
 
 def path_yielder(t, value):
     """Yields all possible paths from the root of t to a node with the label value
@@ -219,10 +269,11 @@ def path_yielder(t, value):
     """
 
     "*** YOUR CODE HERE ***"
-
-    for _______________ in _________________:
-        for _______________ in _________________:
-
+    if t.label == value:
+        yield [t.label]
+    for b in t.branches:
+        for path in path_yielder(b,value):
+            yield [t.label] + path
             "*** YOUR CODE HERE ***"
 
 
